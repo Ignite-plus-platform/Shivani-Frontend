@@ -79,7 +79,7 @@ const Login = () => {
         console.log("registered user");
       })
       .catch(function (error) {
-        if (error.response.request.status === 401) {
+        if (error?.response?.request?.status === 401) {
           alert("This Email Id is not registered. Try using another Email Id");
 
         }

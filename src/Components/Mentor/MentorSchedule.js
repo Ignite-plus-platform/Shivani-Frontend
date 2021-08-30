@@ -42,7 +42,9 @@ const MentorSchedule = () => {
   const [selectEndTime, setselectEndTime] = useState("");
   
   const [open3, setOpen3] = useState(false);
-  
+  const resetDate = () =>{
+    setselectDate(null);
+  }
   const handleClick3 = () => {
     setOpen3(true);
   };
@@ -73,6 +75,7 @@ const MentorSchedule = () => {
         (response) => {
           console.log(response.data);
           handleClick3();
+          resetDate();
         },
         (error) => {
           console.log(error);
@@ -101,7 +104,7 @@ const MentorSchedule = () => {
                   onChange={(date) => setselectDate(date.target.value)}
                   variant="outlined"                 
                   inputProps={{
-                    min: new Date() ,
+                    min: "2021-08-26" ,
                     max: addDays(selectDate)         
                   }}
                   InputLabelProps={{
@@ -127,7 +130,8 @@ const MentorSchedule = () => {
                     shrink: true,
                   }}
                   inputProps={{
-                    min: selectStartTime  ,
+                     min: "2021-08-26 11 PM" ,
+                    // max: "10:00",
                     step: 300, // 5 min
                   }}
                 />

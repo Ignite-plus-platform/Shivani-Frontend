@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     
     width: "80%",
     marginLeft: "150px",
+    marginBottom: "50px",
   },
   
   container: {
@@ -90,14 +91,40 @@ export default function SlotAddedByMentor() {
   }
 
   //Updates the free slots table
+  // function GetFreeSlotsAddedByMentor() {
+  //   var id=localStorage.getItem("userid");
+  //   axios
+  //     .get(`http://localhost:8083/schedule/mentor/getslots/${id}`)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setAns(response.data);
+        
+  //     });
+  //   // window.location.reload();
+  // }
   function GetFreeSlotsAddedByMentor() {
-    var id=localStorage.getItem("userid");
+    var id = localStorage.getItem("userid");
     axios
-      .get(`http://localhost:8083/schedule/mentor/getslots/${id}`)
+      .get("http://localhost:8083/schedule/mentor/view", {
+        params: { userid: id },
+      })
       .then((response) => {
         console.log(response.data);
         setAns(response.data);
         
+        const item = {
+          date: response.data.date,
+          start: response.data.start_time,
+          end: response.data.end_time,
+          mentee_name: response.data.mentee_name,
+          slotid: response.data.slotid,
+          schedule_id: response.data.schedule_id,
+        };
+      })
+      .catch(function (error) {
+        // if (error.response.request.status === 404) {
+        //   alert(error.response.request.message);
+        // }
       });
     // window.location.reload();
   }
@@ -134,12 +161,18 @@ export default function SlotAddedByMentor() {
             {ans
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
-                <TableRow key={row.date}>
+                //<TableRow key={row.date}>
+                  <TableRow
+                  key={row.date}
+                  style={{
+                    backgroundColor: row.slotid === 0 ? "#FAFAFA" : "#DEDEDE",
+                  }}
+                  >
                   <TableCell>{no++}</TableCell>
                   <TableCell>{row.date}</TableCell>
                   <TableCell>{row.start_time}</TableCell>
                   <TableCell>{row.end_time}</TableCell>
-                  <TableCell>--</TableCell>
+                  <TableCell>{row.mentee_name}</TableCell>
                   <TableCell>
                     <IconButton onClick={handleClickOpen}>
                       <Delete />
@@ -172,16 +205,17 @@ export default function SlotAddedByMentor() {
               ))}
           </TableBody>
           <TableFooter>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 15]}
-              component="div"
-              count={ans.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              
-            />
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 15]}
+                component="div"
+                count={ans.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+              />
+            </TableRow>
           </TableFooter>
         </Table>
       </TableContainer>
