@@ -9,7 +9,7 @@ function App() {
       {/* <GoogleAuthentication /> */}
       <Router>
         <Switch>
-          <Route path="/" component={Login} />
+          <Route exact path="/" component={Login} />
           
         </Switch>
       </Router>

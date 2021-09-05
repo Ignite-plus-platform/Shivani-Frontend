@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
 import { useState } from "react";
-import StyledMenu from '@material-ui/core/Menu';
-import StyledMenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Logout from './Pages/Logout';
+import StyledMenu from "@material-ui/core/Menu";
+import StyledMenuItem from "@material-ui/core/MenuItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Logout from "./Pages/Logout";
 
 const NavMenuStyles = styled.div`
   display: flex;
@@ -34,10 +34,10 @@ const NavMenuStyles = styled.div`
   .Welcome {
     font-size: 1.2rem;
   }
-  .Profile{
-    margin-right:1rem;
+  .Profile {
+    margin-right: 1rem;
   }
-  .color1{
+  .color1 {
     color: black;
     background-color: lightgrey;
   }
@@ -86,7 +86,10 @@ function NavMenu() {
       </div>
       <ul>
         <li>
-          <NavLink to="/" exact> Home </NavLink>
+          <NavLink to="/" exact>
+            {" "}
+            Home{" "}
+          </NavLink>
         </li>
 
         <li>
@@ -109,29 +112,30 @@ function NavMenu() {
         Welcome {localStorage.getItem("displayname")}
       </div>
       <div className="Profile">
-        <Button 
+        <Button
           aria-controls="customized-menu"
           aria-haspopup="true"
           color="primary"
-          onClick={handleClick}>
-            <Avatar className="color1"><b>S</b></Avatar>
+          onClick={handleClick}
+        >
+          <Avatar className="color1">
+            <b>{localStorage.getItem("displayname").charAt(0)}</b>
+          </Avatar>
         </Button>
         <StyledMenu
-        id="customized-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
+          id="customized-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
         >
-        <StyledMenuItem>
-          
-          <ListItemText primary="Profile" />
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemText primary="Logout" onClick={<Logout/>} />
-        </StyledMenuItem>
-        
-      </StyledMenu>
+          <StyledMenuItem>
+            <ListItemText primary="Profile" />
+          </StyledMenuItem>
+          <StyledMenuItem>
+            <ListItemText primary="Logout" onClick={<Logout />} />
+          </StyledMenuItem>
+        </StyledMenu>
       </div>
     </NavMenuStyles>
   );

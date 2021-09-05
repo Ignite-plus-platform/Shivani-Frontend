@@ -12,7 +12,7 @@ const GoogleAuthentication = () => {
     console.log(profile);
 
     axios
-      .get(`http://localhost:8083/login/getUser/${profile.email}`)
+      .get(`http://localhost:8080/login/getUser/${profile.email}`)
       .then((response) => {
         console.log(response.data);
         localStorage.setItem("userid", response.data.userid);
