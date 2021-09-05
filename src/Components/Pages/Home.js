@@ -16,6 +16,9 @@ const Home = ({ authorized }) => {
   }
   return (
     <div>
+    <div style={{marginTop:"500px"}}>
+      <h1>Welcome</h1>
+    </div>
       <Router>
         <NavMenu />
         <Switch>
