@@ -131,7 +131,7 @@ export default function SlotAddedByMentor({ shouldReload, handleReload }) {
   return (
     <div>
       <div>
-        <h3>Free Slots</h3>
+        <h3>Schedule</h3>
       </div>
       <TableContainer component={Paper} className={classes.tableContainer}>
         <Table className={classes.table} aria-label="simple table">
