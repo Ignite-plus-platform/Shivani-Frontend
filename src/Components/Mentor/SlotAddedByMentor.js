@@ -13,10 +13,10 @@ import axios from "axios";
 import TableFooter from "@material-ui/core/TableFooter";
 import IconButton from "@material-ui/core/IconButton";
 import Delete from "@material-ui/icons/DeleteSharp";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
 //import Snackbar from '@material-ui/core/Snackbar';
 //import Alert from '@material-ui/lab/Alert';
 
@@ -26,30 +26,29 @@ const useStyles = makeStyles((theme) => ({
     width: "80%",
   },
   tableContainer: {
-    
     width: "80%",
     marginLeft: "150px",
     marginBottom: "50px",
   },
-  
+
   container: {
     maxHeight: 440,
   },
   tableHeaderCell: {
     //fontWeight: "bold",
-    color:"white",
+    color: "white",
     backgroundColor: "rgb(204,0,0)",
   },
 }));
 
-export default function SlotAddedByMentor() {
+export default function SlotAddedByMentor({ shouldReload, handleReload }) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [ans, setAns] = useState([]);
   const [open, setOpen] = React.useState(false);
   //const [open1, setOpen1] = React.useState(false);
- 
+
   //For dialog box that appears to confirm the deletion task
   const handleClickOpen = () => {
     setOpen(true);
@@ -77,17 +76,17 @@ export default function SlotAddedByMentor() {
   };
 
   //Delete slot function
-  function DeleteSchedule(schedduleid) {
-    handleClose();
+  function DeleteSchedule(id, sltid) {
     axios
-      .delete(`http://localhost:8083/schedule/mentor/deleteslot/${schedduleid}`)
+      .delete("http://localhost:8080/schedule/mentor/deleteslot", {
+        params: { scheduleid: id, slotid: sltid },
+      })
       .then((response) => {
-        console.log('Slot Deleted');        
-        //alert(response.data);
+        alert(response.data);
+        handleClose();
+        GetFreeSlotsAddedByMentor();
+        // handleReload(false);
       });
-    //window.location.reload();
-    GetFreeSlotsAddedByMentor();
-    
   }
 
   //Updates the free slots table
@@ -98,40 +97,34 @@ export default function SlotAddedByMentor() {
   //     .then((response) => {
   //       console.log(response.data);
   //       setAns(response.data);
-        
+
   //     });
   //   // window.location.reload();
   // }
   function GetFreeSlotsAddedByMentor() {
     var id = localStorage.getItem("userid");
     axios
-      .get("http://localhost:8083/schedule/mentor/view", {
+      .get("http://localhost:8080/schedule/mentor/view", {
         params: { userid: id },
       })
       .then((response) => {
         console.log(response.data);
         setAns(response.data);
-        
-        const item = {
-          date: response.data.date,
-          start: response.data.start_time,
-          end: response.data.end_time,
-          mentee_name: response.data.mentee_name,
-          slotid: response.data.slotid,
-          schedule_id: response.data.schedule_id,
-        };
+        handleReload(false);
       })
       .catch(function (error) {
         // if (error.response.request.status === 404) {
         //   alert(error.response.request.message);
         // }
+        handleReload(false);
       });
-    // window.location.reload();
   }
 
   useEffect(() => {
-        GetFreeSlotsAddedByMentor();
-  }, [ans]);
+    if (shouldReload) {
+      GetFreeSlotsAddedByMentor();
+    }
+  }, [shouldReload]);
 
   var no = 1;
 
@@ -145,30 +138,37 @@ export default function SlotAddedByMentor() {
           <TableHead>
             <TableRow>
               {/* <TableCell className={classes.tableHeaderCell}>Sr.No</TableCell> */}
-              <TableCell className={classes.tableHeaderCell} style={{ width: 100 }}>Sr. No</TableCell>
-              <TableCell  className={classes.tableHeaderCell} >Date</TableCell>
+              <TableCell
+                className={classes.tableHeaderCell}
+                // style={{ width: 100 }}
+              >
+                Sr. No
+              </TableCell>
+              <TableCell className={classes.tableHeaderCell}>Date</TableCell>
               <TableCell className={classes.tableHeaderCell}>
                 Start Time
               </TableCell>
               <TableCell className={classes.tableHeaderCell}>
                 End Time
               </TableCell>
-              <TableCell className={classes.tableHeaderCell}>Mentee Name</TableCell>
+              <TableCell className={classes.tableHeaderCell}>
+                Mentee Name
+              </TableCell>
               <TableCell className={classes.tableHeaderCell}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {ans
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
+              .map((row, index) => (
                 //<TableRow key={row.date}>
-                  <TableRow
+                <TableRow
                   key={row.date}
                   style={{
                     backgroundColor: row.slotid === 0 ? "#FAFAFA" : "#DEDEDE",
                   }}
-                  >
-                  <TableCell>{no++}</TableCell>
+                >
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell>{row.date}</TableCell>
                   <TableCell>{row.start_time}</TableCell>
                   <TableCell>{row.end_time}</TableCell>
@@ -182,17 +182,25 @@ export default function SlotAddedByMentor() {
                       open={open}
                       onClose={handleClose}
                       aria-labelledby="alert-dialog-title"
-                      >
-                        <DialogTitle id="alert-dialog-title">{"Are you sure that you want to delete the slot?"}</DialogTitle>
-                        
-                        <DialogActions>
-                          <Button onClick={handleClose} color="primary">
-                            Cancel
-                          </Button>
-                          <Button onClick={() => DeleteSchedule(row.schedule_id)} color="primary" autoFocus>
-                            Delete
-                          </Button>
-                        </DialogActions>
+                    >
+                      <DialogTitle id="alert-dialog-title">
+                        {"Are you sure that you want to delete the slot?"}
+                      </DialogTitle>
+
+                      <DialogActions>
+                        <Button onClick={handleClose} color="primary">
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            DeleteSchedule(row.schedule_id, row.slotid)
+                          }
+                          color="primary"
+                          autoFocus
+                        >
+                          Delete
+                        </Button>
+                      </DialogActions>
                     </Dialog>
                     {/*<Snackbar open={open1} autoHideDuration={3000} onClose={handleClose1} 
                     anchorOrigin={{vertical:'top',horizontal:'center' }}>

@@ -1,4 +1,3 @@
-
 import {
   Redirect,
   BrowserRouter as Router,
@@ -20,23 +19,23 @@ const Home = ({ authorized }) => {
       <Router>
         <NavMenu />
         <Switch>
-          <Route path="/about">
+          <Route exact path="/about">
             <About />
           </Route>
 
-          <Route path="/Schedule">
-              <Schedule />
+          <Route exact path="/Schedule">
+            <Schedule />
           </Route>
 
-          <Route path="learningplan">
-                <LearningPlan/>
+          <Route exact path="/learningplan">
+            <LearningPlan />
           </Route>
 
-          <Route path="/contact">
+          <Route exact path="/contact">
             <NewsLetter />
           </Route>
 
-          <Route path="/">
+          <Route exact path="/home">
             <Home />
           </Route>
         </Switch>

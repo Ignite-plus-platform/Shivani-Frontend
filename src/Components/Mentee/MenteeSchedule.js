@@ -1,36 +1,29 @@
-import { Button } from "@material-ui/core";
 import styled from "styled-components";
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import SlotAddedByMentee from "./SlotAddedByMentee";
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import PropTypes from 'prop-types';
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import PropTypes from "prop-types";
 import BookedSlots from "./BookedSlots";
 import { useEffect } from "react";
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 
 const AboutStyles = styled.div`
   text-align: center;
   align-items: center;
-  margin-top:7rem;
+  margin-top: 7rem;
   .maincont {
     margin-top: 3rem;
     margin-bottom: 5rem;
   }
-  .root{
+  .root {
     margin-top: 3.5rem;
-    width:80%;
-    margin-left:8rem;
-   
+    width: 80%;
+    margin-left: 8rem;
   }
 `;
 
@@ -63,65 +56,32 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
 const MenteeSchedule = () => {
   const [Names, setNames] = useState(null);
   const [value, setValue] = useState(0);
-  const [able,setable] = useState(true);
+  const [able, setable] = useState(true);
   const [Name, setName] = useState([]);
-  const [userid,setuserid] = useState(null);
-  
-  const handleChange = (event) => {
-    setNames(event.target.value);
-    console.log(Names + " selected");
-    setable(false);
-    setuserid(finduserid());
-    console.log(userid + " selected");
-  };
-  // const handleChange = (event) => {
-  //   const name = event.target.name;
-  //   console.log("What is this "+ name);
-  //   setName({
-  //     ...Name,
-  //     [name]: event.target.value,      
-  //   });
-  //   console.log("This is "+event.target.value);
-  // };
-  
+  const [userid, setuserid] = useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [my, setMy] = useState(null);
+  var sendid = 0;
 
   const handleChange1 = (event, newValue) => {
     setValue(newValue);
   };
-  function finduserid(){
-    
-    for(let i=0;i<Name.length;i++)
-    {
-
-        if(Name[i].name == Names)
-        {
-           
-          setuserid(Name[i].userid);
-          console.log("hi" + Name[i].userid);
-          return Name[i].userid;
-          
-        }
-        
-    }
-    
-  }
 
   function GetMentorNameandEmailId() {
-    console.log("Hello")
+    console.log("Hello");
     axios
-      .get("http://localhost:8083/schedule/mentee/getMentor")
+      .get("http://localhost:8080/schedule/mentee/getMentor")
       .then((response) => {
         console.log(response.data);
         setName(response.data);
         console.log("In");
-        
       })
       .catch(function (error) {
         // if (error.response.request.status === 404) {
@@ -133,18 +93,26 @@ const MenteeSchedule = () => {
 
   useEffect(() => {
     GetMentorNameandEmailId();
-}, []);
+  }, []);
 
-
-    
-  function addDays(date)
-  {
+  function addDays(date) {
     var result = new Date(date);
     result.setDate(result.getDate() + 7);
     return result;
   }
+  function finduserid(val) {
+    for (let i = 0; i < Name.length; i++) {
+      if (Name[i].name == val) {
+        setuserid(Name[i].userid);
+      }
+    }
+  }
 
-  
+  function handleChange(val) {
+    setable(false);
+    console.log("hoyy " + val);
+    finduserid(val);
+  }
 
   return (
     <div>
@@ -153,80 +121,52 @@ const MenteeSchedule = () => {
           <h2>Feed in the details </h2>
           <div className="Mentor_Name">
             <h3>Mentor Name</h3>
-              <form>   
-                <TextField
-                    id="standard-select-currency-native"
-                    select
-                    value={Names}
-                    onChange={handleChange}
-                    variant="outlined" 
-                    placeholder="Name"
-                    SelectProps={{
-                        native: true,
-                    }}
-                    helperText="* Please select Mentor Name"
-                    >
-                    {Name.map((option) => (
-                        <option key={option.name} value={option.name}>
-                        {option.name} 
-                        </option>
-                    ))}
-                </TextField>
-              </form>
-              {/* <FormControl variant="outlined" >
-                <InputLabel htmlFor="outlined-age-native-simple"></InputLabel>
-                <Select
-                  native
-                  //value={Name.name}
-                  onChange={handleChange}
-                  
-                  inputProps={{
-                    name: 'Mentor Name',
-                    id: 'outlined-age-native-simple',
-                  }}
-                >
-                  {/* <option aria-label="None" value="" />
-                  <option value={10}>Ten</option>
-                  <option value={20}>Twenty</option>
-                  <option value={30}>Thirty</option> */}
-                  {Name.map((option) => (
-                        <option key={option.name} value={option.name}>
-                        {option.name} 
-                        </option>
-                  ))}
-                  {/* {Name.map((name) => (
-                    <MenuItem key={name} value={name}>
-                      {name}
-                    </MenuItem>
-                  ))} */}
-                </Select>
-              </FormControl> */}
-              </div>
-              <div className="root">
-                <AppBar position="static">
-                  <Tabs value={value} onChange={handleChange1} >
-                    <Tab label="Booked Slots" {...a11yProps(0)} />
-                    <Tab label="Mentor Free Slots" {...a11yProps(1)} disabled={able} />
-                    
-                  </Tabs>
-                </AppBar>
-                <TabPanel value={value} index={0}>
-                  <BookedSlots/>
-                </TabPanel>
-                <TabPanel value={value} index={1} >
-                  <SlotAddedByMentee userid={userid}/>
-                </TabPanel>
-                
-              </div>
-          
+            <form>
+              <TextField
+                id="standard-select-currency-native"
+                select
+                value={Names}
+                onChange={(event) => {
+                  setNames(event.target.value);
+                  handleChange(event.target.value);
+                }}
+                variant="outlined"
+                placeholder="Name"
+                SelectProps={{
+                  native: true,
+                }}
+                helperText="* Please select Mentor Name"
+              >
+                {Name.map((row) => (
+                  <option key={row.name} value={row.name}>
+                    {row.name}
+                  </option>
+                ))}
+              </TextField>
+            </form>
+          </div>
+          <div className="root">
+            <AppBar position="static">
+              <Tabs value={value} onChange={handleChange1}>
+                <Tab label="Booked Slots" {...a11yProps(0)} />
+                <Tab
+                  label="Mentor Free Slots"
+                  {...a11yProps(1)}
+                  disabled={able}
+                />
+              </Tabs>
+            </AppBar>
+            <TabPanel value={value} index={0}>
+              <BookedSlots />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <SlotAddedByMentee userid={userid} />
+            </TabPanel>
+          </div>
         </div>
-        
       </AboutStyles>
-      
     </div>
   );
 };
-
-
 
 export default MenteeSchedule;

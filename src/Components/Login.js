@@ -6,7 +6,9 @@ const LoginUser = () => {
   // const [role, setRole] = useState("");
 
   const ans = axios
-    .get(`http://localhost:8083/login/getUser/shivani.deshmukh@cumminscollege.in`)
+    .get(
+      `http://localhost:8080/login/getUser/shivani.deshmukh@cumminscollege.in`
+    )
     .then((response) => {
       console.log(response.data);
       localStorage.setItem("user", response.data.name);

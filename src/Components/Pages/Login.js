@@ -1,11 +1,11 @@
 // import Bgpic1 from "../images/Bgpic1.jpg";
 import styled from "styled-components";
 import GoogleLogin from "react-google-login";
-import { BrowserRouter as Router,Route,useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Route, useHistory } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import Home from './Home';
-import Targetpic from '../images/Targetpic.jpg';
+import Home from "./Home";
+import Targetpic from "../images/Targetpic.jpg";
 //import Error from "../Error";
 
 const AppStyles = styled.div`
@@ -55,7 +55,6 @@ const AppStyles = styled.div`
 const Login = () => {
   const [showloginButton, setShowloginButton] = useState(true);
   //const history = useHistory();
-  
 
   const onLoginSuccess = (res) => {
     //profile information of user trying to login
@@ -64,7 +63,7 @@ const Login = () => {
     console.log(profile.givenName);
 
     axios
-      .get(`http://localhost:8083/login/getUser/${profile.email}`)
+      .get(`http://localhost:8080/login/getUser/${profile.email}`)
       .then((response) => {
         console.log(response);
         console.log(response.data);
@@ -74,14 +73,13 @@ const Login = () => {
         localStorage.setItem("role", response.data.role);
 
         // render uer to home page
-        
+
         setShowloginButton(false);
         console.log("registered user");
       })
       .catch(function (error) {
         if (error?.response?.request?.status === 401) {
           alert("This Email Id is not registered. Try using another Email Id");
-
         }
         //<Error />;
       });
@@ -93,50 +91,50 @@ const Login = () => {
 
   return (
     <div>
-        { showloginButton ?
-
+      {showloginButton ? (
         <AppStyles>
-        
-        <div className="container" >
-          <header>
-          <div className="head-text">
-          <div className="background">
-            <img src={Targetpic} alt="" style={{height:'710px',width:'800px'}}/>
-    
-          </div>
-          <div className="heading">
-            <h1>MENTOS</h1>
-          </div>
-          </div>
-          </header>
-          
-          <div className="login" >
-            <div className="innerbox" > 
-            <h1>Connecting Mentors and Mentees.</h1>
-            <br></br><br></br><hr></hr>
-            <h2>Login </h2>
-            <GoogleLogin
-                    clientId="415218634076-323ovbk93f9jptho379cs6cr7ffnlee2.apps.googleusercontent.com"
-                    buttonText="Sign in via Gmail"
-                    onSuccess={onLoginSuccess}
-                    onFailure={onLoginFailure}
-                    isSignedIn={true}
-                    cookiePolicy={'single_host_origin'} 
-                    theme="dark"       
-            />
-    
+          <div className="container">
+            <header>
+              <div className="head-text">
+                <div className="background">
+                  <img
+                    src={Targetpic}
+                    alt=""
+                    style={{ height: "710px", width: "800px" }}
+                  />
+                </div>
+                <div className="heading">
+                  <h1>MENTOS</h1>
+                </div>
+              </div>
+            </header>
+
+            <div className="login">
+              <div className="innerbox">
+                <h1>Connecting Mentors and Mentees.</h1>
+                <br></br>
+                <br></br>
+                <hr></hr>
+                <h2>Login </h2>
+                <GoogleLogin
+                  clientId="415218634076-323ovbk93f9jptho379cs6cr7ffnlee2.apps.googleusercontent.com"
+                  buttonText="Sign in via Gmail"
+                  onSuccess={onLoginSuccess}
+                  onFailure={onLoginFailure}
+                  isSignedIn={true}
+                  cookiePolicy={"single_host_origin"}
+                  theme="dark"
+                />
+              </div>
             </div>
           </div>
-          </div>
-          
-          </AppStyles> 
-          : 
-          <Router>
-              
-              <Route path="/" component={()=> <Home authorized={true}/>}/>      
-          </Router>
-          }
-          </div>
+        </AppStyles>
+      ) : (
+        <Router>
+          <Route path="/" component={() => <Home authorized={true} />} />
+        </Router>
+      )}
+    </div>
   );
 };
 export default Login;

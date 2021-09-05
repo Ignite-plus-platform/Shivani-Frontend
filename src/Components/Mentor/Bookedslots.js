@@ -50,7 +50,7 @@ export default function Bookedslots() {
 
   function DeleteSchedule(schedduleid) {
     axios
-      .delete(`http://localhost:8083/schedule/mentor/deleteslot/${schedduleid}`)
+      .delete(`http://localhost:8080/schedule/mentor/deleteslot/${schedduleid}`)
       .then((response) => {
         alert(response.data);
       });
@@ -60,7 +60,7 @@ export default function Bookedslots() {
 
   function GetFreeSlotsAddedByMentor() {
     axios
-      .get("http://localhost:8083/schedule/mentor/getslots/101")
+      .get("http://localhost:8080/schedule/mentor/getslots/101")
       .then((response) => {
         console.log(response.data);
         setAns(response.data);
